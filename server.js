@@ -4,7 +4,7 @@ const app = express()
 const server = http.createServer(app)
 const io = require("socket.io")(server, {
 	cors: {
-		origin: "https://inst-clone-react-8a913.web.app/",
+		origin: "https://inst-clone-react-8a913.web.app",
 		methods: [ "GET", "POST" ]
 	}
 })
@@ -26,7 +26,7 @@ io.on("connection", (socket) => {
 })
 
 server.listen(5000, () => {
-    console.log("server is running on port 5000");
+    console.log("server is running on port 5000, cors added for :: https://inst-clone-react-8a913.web.app");
 })
 
 app.get("/", (req, res, next) => {
