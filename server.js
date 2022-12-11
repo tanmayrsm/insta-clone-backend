@@ -2,16 +2,29 @@ const express = require("express")
 const http = require("http")
 const app = express()
 const server = http.createServer(app)
+const cors = require('cors');
+const PORT = process.env.PORT || 5000;
+let storeSocket;
+
 const io = require("socket.io")(server, {
 	cors: {
-		origin: "https://inst-clone-react-8a913.web.app",
+		origin: "*",
 		methods: [ "GET", "POST" ]
 	}
 })
 
-io.on("connection", (socket) => {
-	socket.emit("me", socket.id)
 
+server.listen(PORT, () => {
+    console.log(`server is running on port 5000, cors added for :: http://localhost:3000 :: PORT :: ${PORT}`);
+})
+
+app.use(cors());
+// app.get("/", (req, res, next) => {
+//     res.json(["Tony","Lisa","Michael","Ginger","Food"]);
+// });
+io.on("connection", (socket) => {
+	
+	storeSocket = socket;
 	socket.on("disconnect", () => {
 		socket.broadcast.emit("callEnded")
 	})
@@ -23,12 +36,11 @@ io.on("connection", (socket) => {
 	socket.on("answerCall", (data) => {
 		io.to(data.to).emit("callAccepted", data.signal)
 	})
-})
-
-server.listen(5000, () => {
-    console.log("server is running on port 5000, cors added for :: https://inst-clone-react-8a913.web.app");
-})
-
-app.get("/", (req, res, next) => {
-    res.json(["Tony","Lisa","Michael","Ginger","Food"]);
 });
+app.get(`/establish`, (req, res, next) => {
+	if(storeSocket) {
+		storeSocket.emit("me", storeSocket.id)
+		console.log("id emit :: ", storeSocket.id);
+	}
+	return res.json("ok emitted");	
+})
