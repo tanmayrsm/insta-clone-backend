@@ -62,7 +62,10 @@ io.on("connection", (socket) => {
     });
 
     socket.on("sending signal", payload => {
-        io.to(payload.userToSignal).emit('user joined', { signal: payload.signal, callerID: payload.callerID });
+        setTimeout(() => {
+            io.to(payload.userToSignal).emit('user joined', { signal: payload.signal, callerID: payload.callerID });
+            console.log("User joined :: ",payload.callerID );
+        }, 5000)    // this time must increase as oer no of users for now
     });
 
     socket.on("returning signal", payload => {
@@ -87,7 +90,7 @@ io.on("connection", (socket) => {
 app.get(`/establish`, (req, res, next) => {
 	if(storeSocket) {
 		storeSocket.emit("me", storeSocket.id)
-		console.log("id emit :: ", storeSocket.id);
+		// console.log("id emit :: ", storeSocket.id);
 	}
 	return res.json("ok emitted");	
 })
