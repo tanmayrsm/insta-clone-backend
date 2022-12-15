@@ -15,7 +15,7 @@ const io = require("socket.io")(server, {
 
 
 server.listen(PORT, () => {
-    console.log(`server is running on port 5000, cors added for :: http://localhost:3000 :: PORT :: ${PORT}`);
+    console.log(`server is running, cors added for :: dev url :: PORT :: ${PORT}`);
 })
 
 app.use(cors());
